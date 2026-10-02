@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Я-сообщения: практикум для родителей</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #e8eef2;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: #1f2d3a;
+        }
+        .app {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 50px rgba(30, 50, 70, 0.12);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 620px;
+        }
+        .header {
+            background: #34586b;
+            padding: 22px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header h1 {
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+        .header .subtitle {
+            color: #a9c4d3;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        .score-badge {
+            background: #f0c869;
+            color: #3a2a08;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .content {
+            flex: 1;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+        .intro h2 {
+            color: #34586b;
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+        }
+        .intro p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #34495e;
+            margin-bottom: 14px;
+        }
+        .formula-box {
+            background: #f5f9fb;
+            border-left: 5px solid #6ea3b8;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 22px 0;
+        }
+        .formula-box .formula-title {
+            font-weight: 700;
+            color: #34586b;
+            margin-bottom: 10px;
+        }
+        .formula-steps {
+            list-style: none;
+        }
+        .formula-steps li {
+            padding: 6px 0;
+            font-size: 1rem;
+            color: #2c3e50;
+            display: flex;
+            gap: 10px;
+        }
+        .formula-steps li .step-num {
+            background: #6ea3b8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .example-block {
+            background: #fdf7ea;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 12px 0;
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+        .example-block .bad {
+            color: #b4472f;
+            margin-bottom: 10px;
+        }
+        .example-block .good {
+            color: #2e6b4a;
+        }
+        .example-block .label {
+            font-weight: 700;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .btn {
+            background: #6ea3b8;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 14px 32px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.15s;
+            align-self: flex-start;
+            margin-top: 12px;
+            box-shadow: 0 4px 0 #4a7d92;
+        }
+        .btn:hover:not(:disabled) {
+            background: #5c93a8;
+        }
+        .btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #4a7d92;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            background: #9fb8c4;
+        }
+        .game-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .progress-info {
+            font-weight: 600;
+            color: #34586b;
+            font-size: 1rem;
+        }
+        .progress-bar-wrap {
+            height: 8px;
+            background: #dde7ec;
+            border-radius: 10px;
+            flex: 1;
+            margin-left: 18px;
+            min-width: 120px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #6ea3b8;
+            border-radius: 10px;
+            transition: width 0.25s;
+        }
+        .situation-card {
+            background: #f5f9fb;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            border-left: 5px solid #34586b;
+        }
+        .situation-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6ea3b8;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .situation-text {
+            font-size: 1.1rem;
+            color: #1f2d3a;
+            line-height: 1.5;
+        }
+        .ty-message {
+            background: #fdece8;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin: 16px 0 22px;
+            color: #a13d28;
+            font-style: italic;
+            font-size: 1rem;
+            position: relative;
+        }
+        .ty-message::before {
+            content: '❌ Так говорить не стоит:';
+            display: block;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            color: #c15942;
+        }
+        .options-title {
+            font-weight: 700;
+            color: #34586b;
+            margin-bottom: 14px;
+            font-size: 1rem;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option {
+            background: #ffffff;
+            border: 2px solid #d5e1e8;
+            border-radius: 14px;
+            padding: 16px 20px;
+            cursor: pointer;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            color: #1f2d3a;
+            text-align: left;
+            font-family: inherit;
+            transition: 0.12s;
+        }
+        .option:hover:not(.locked) {
+            border-color: #6ea3b8;
+            background: #f8fbfc;
+        }
+        .option.correct {
+            background: #e4f2e9;
+            border-color: #4a9d6e;
+            color: #1e5238;
+        }
+        .option.wrong {
+            background: #fbe4e0;
+            border-color: #d16b58;
+            color: #8e3522;
+        }
+        .option.locked {
+            cursor: default;
+        }
+        .option .tag {
+            display: inline-block;
+            background: #d5e1e8;
+            color: #34586b;
+            font-size: 0.72rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-right: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 18px 22px;
+            border-radius: 14px;
+            font-size: 0.98rem;
+            line-height: 1.55;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback.correct {
+            background: #e4f2e9;
+            border-left: 5px solid #4a9d6e;
+            color: #1e5238;
+        }
+        .feedback.wrong {
+            background: #fbe4e0;
+            border-left: 5px solid #d16b58;
+            color: #8e3522;
+        }
+        .feedback .fb-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .finish {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .finish h2 {
+            color: #34586b;
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+        .finish .big-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #4a9d6e;
+            margin: 16px 0;
+        }
+        .finish .score-label {
+            color: #6a7f8e;
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+        .finish .message {
+            background: #f5f9fb;
+            border-radius: 14px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.05rem;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .finish .btn {
+            align-self: center;
+            margin: 20px auto 0;
+        }
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 24px;
+            gap: 12px;
+        }
+        .nav-row .btn {
+            margin-top: 0;
+        }
+        .btn.secondary {
+            background: #d5e1e8;
+            color: #34586b;
+            box-shadow: 0 4px 0 #b3c4ce;
+        }
+        .btn.secondary:hover:not(:disabled) {
+            background: #c4d5df;
+        }
+        @media (max-width: 640px) {
+            .content { padding: 22px; }
+            .header { padding: 18px 22px; }
+            .header h1 { font-size: 1.15rem; }
+            .situation-text { font-size: 1rem; }
+            .option { font-size: 0.92rem; padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <div class="header">
+        <div>
+            <h1>Я-сообщения: практикум для родителей</h1>
+            <div class="subtitle">Отработка необвинительной коммуникации с подростком</div>
+        </div>
+        <div class="score-badge" id="scoreBadge">Верно: 0 / 20</div>
+    </div>
+    <div class="content" id="content"></div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // ПРАКТИКУМ «Я-СООБЩЕНИЯ» — 20 СИТУАЦИЙ
+    // Формула: Факт (без оценки) → Чувство → Потребность → Просьба
+    // В каждом вопросе правильный вариант НЕ самый длинный.
+    // Длинные неверные варианты содержат скрытое обвинение/долженствование.
+    // --------------------------------------------------------------
+
+    const introHTML = `
+        <div class="intro">
+            <h2>Как говорить, чтобы вас услышали</h2>
+            <p>В конфликте с подростком мы часто используем <strong>«Ты-сообщения»</strong>: «Ты опять пришёл поздно», «Ты меня не уважаешь», «Ты никогда не слушаешь». Они вызывают защиту, крик, уход в себя.</p>
+            <p><strong>«Я-сообщение»</strong> говорит о ваших чувствах и потребностях, не обвиняя. Оно снижает напряжение и открывает диалог.</p>
+
+            <div class="formula-box">
+                <div class="formula-title">Формула Я-сообщения</div>
+                <ul class="formula-steps">
+                    <li><span class="step-num">1</span><span><strong>Факт</strong> — что я вижу/слышу, без оценки.</span></li>
+                    <li><span class="step-num">2</span><span><strong>Чувство</strong> — что я чувствую в этот момент.</span></li>
+                    <li><span class="step-num">3</span><span><strong>Потребность</strong> — что мне важно.</span></li>
+                    <li><span class="step-num">4</span><span><strong>Просьба</strong> — конкретное действие, о котором я прошу.</span></li>
+                </ul>
+            </div>
+
+            <div class="example-block">
+                <div class="bad"><span class="label">❌ Ты-сообщение:</span>«Ты опять припёрся в три ночи! Ты сводишь меня с ума!»</div>
+                <div class="good"><span class="label">✅ Я-сообщение:</span>«Когда я вижу пустую кровать в 3 часа ночи, я испытываю ужас. Мне важно знать, что ты в безопасности. Давай договоримся: если задерживаешься — пришли смайлик».</div>
+            </div>
+
+            <p>Сейчас вы потренируетесь: для каждой ситуации нужно выбрать правильное Я-сообщение из четырёх вариантов. Внимание: правильный ответ не всегда самый длинный — среди неверных есть очень длинные варианты, которые звучат убедительно, но содержат обвинение, требование или манипуляцию.</p>
+
+            <button class="btn" id="startBtn">Начать практикум</button>
+        </div>
+    `;
+
+    const situations = [
+        {
+            situation: "Подросток не отвечает на звонки уже несколько часов.",
+            tyMessage: "«Ты меня не уважаешь! Тебе плевать, что я волнуюсь!»",
+            options: [
+                { correct: false, text: "Когда ты не берёшь трубку несколько часов, я места себе не нахожу. Я думаю о самом плохом, не могу работать и не могу спать. Мне очень важно, чтобы ты всегда отвечал мне, когда я звоню. Пожалуйста, не заставляй меня так переживать.", explanation: "Длинное, эмоциональное сообщение, но в конце — «не заставляй меня» (скрытое обвинение) и «ты всегда отвечал» (долженствование)." },
+                { correct: false, text: "Мне неприятно, когда ты не берёшь трубку. Ты должен понимать, что я волнуюсь.", explanation: "Есть чувство, но «ты должен понимать» — требование. Нет конкретной просьбы-договора." },
+                { correct: true, text: "Когда я звоню, а ты не отвечаешь, я волнуюсь. Мне важно знать, что ты в порядке. Пиши, пожалуйста, если задерживаешься.", explanation: "Правильно: факт, чувство (волнение), потребность (знать, что в порядке) и конкретная просьба." },
+                { correct: false, text: "Ты меня не уважаешь.", explanation: "Короткое обвинение в адрес личности. Никаких чувств и просьб." }
+            ]
+        },
+        {
+            situation: "Подросток нагрубил вам при гостях.",
+            tyMessage: "«Как ты смеешь так со мной разговаривать при людях!»",
+            options: [
+                { correct: false, text: "Мне было очень неприятно, что ты не уважаешь меня в присутствии других людей. Ты должен был сдержаться, ведь дома можно было сказать мне всё, что ты думаешь.", explanation: "«Ты должен был сдержаться» — обвинение и долженствование." },
+                { correct: false, text: "Мне стыдно за тебя перед гостями. В следующий раз я не буду тебя приглашать.", explanation: "Манипуляция и угроза, а не описание чувств. Нет просьбы." },
+                { correct: true, text: "Когда при гостях ты говоришь со мной грубо, я чувствую растерянность и обиду. Мне важно, чтобы наше общение при других оставалось уважительным. Давай договоримся: если что-то не нравится, скажешь мне наедине.", explanation: "Правильно: факт, чувства, потребность и просьба." },
+                { correct: false, text: "Ты невоспитанный и неблагодарный.", explanation: "Оценка личности и ярлыки." }
+            ]
+        },
+        {
+            situation: "Подросток заперся в комнате и не выходит уже несколько часов.",
+            tyMessage: "«Немедленно открой дверь! Сколько можно сидеть там!»",
+            options: [
+                { correct: false, text: "Открой сейчас же!", explanation: "Приказ и требование. Никаких чувств и просьб." },
+                { correct: false, text: "Мне так страшно, когда ты закрываешься и не выходишь. Я думаю, что ты что-то скрываешь или что тебе плохо, и я не знаю, как помочь. Я не могу это выносить. Ты должен открыть дверь и поговорить со мной.", explanation: "Длинное эмоциональное сообщение, но в конце «ты должен» — требование." },
+                { correct: true, text: "Когда ты долго не выходишь из комнаты, я тревожусь. Мне важно знать, что ты в порядке. Дай знать, что всё хорошо, хотя бы коротко.", explanation: "Правильно: факт, чувство, потребность и мягкая просьба." },
+                { correct: false, text: "Ты меня игнорируешь. Я устала стучаться в закрытую дверь.", explanation: "Обвинение в адрес подростка. Нет описания чувств через «я» и нет конкретной просьбы." }
+            ]
+        },
+        {
+            situation: "Подросток взял деньги без спроса.",
+            tyMessage: "«Ты вор! Как ты мог взять без разрешения!»",
+            options: [
+                { correct: false, text: "Когда я обнаружила, что деньги пропали без моего ведома, я почувствовала себя преданной. Я не могу тебе доверять после этого. В следующий раз, если возьмёшь без спроса, я буду запирать кошелёк.", explanation: "Угроза и обобщение («не могу доверять»), а не Я-сообщение. Нет просьбы о диалоге." },
+                { correct: true, text: "Когда я увидела, что деньги пропали без ведома, я обиделась. Мне важно, чтобы мы решали денежные вопросы вместе. Давай обсудим, как это делать.", explanation: "Правильно: факт, чувство, потребность и приглашение к диалогу." },
+                { correct: false, text: "Ты вор.", explanation: "Оскорбление и ярлык." },
+                { correct: false, text: "Мне неприятно. Ты должен был спросить разрешения.", explanation: "Есть чувство, но «ты должен был» — обвинение и долженствование." }
+            ]
+        },
+        {
+            situation: "Подросток весь день просидел в телефоне, не сделав домашние дела.",
+            tyMessage: "«Ты целый день в телефоне! Ничего не делаешь по дому!»",
+            options: [
+                { correct: false, text: "Ты бездельник.", explanation: "Ярлык и обвинение личности." },
+                { correct: false, text: "Когда ты сидишь весь день в телефоне, а посуда стоит немытая, я чувствую усталость и обиду, ведь мне приходится всё делать самой. Я не могу больше это терпеть. Ты должен помогать мне по дому без напоминаний.", explanation: "Длинное сообщение, но в конце — «ты должен» и «не могу больше терпеть». Это обвинение, а не просьба." },
+                { correct: true, text: "Когда я вижу немытую посуду, а ты в телефоне, я устаю. Мне важно, чтобы мы делили дела. Помой посуду до 18:00, хорошо?", explanation: "Правильно: факт, чувство, потребность и конкретная просьба со временем." },
+                { correct: false, text: "Мне всё равно, что ты делаешь. Просто убери за собой.", explanation: "Пассивная агрессия и приказ." }
+            ]
+        },
+        {
+            situation: "Подросток требует купить дорогую вещь, которой у вас нет возможности приобрести.",
+            tyMessage: "«Ты что, не понимаешь, что у нас нет денег?!»",
+            options: [
+                { correct: false, text: "Когда ты просишь то, что я не могу купить, мне становится очень стыдно, что я плохая мать. Я чувствую себя виноватой и не знаю, что делать. Мне так важно дать тебе всё, но я не могу. Прости меня за это.", explanation: "Только чувство вины, нет потребности и просьбы. Позиция жертвы." },
+                { correct: true, text: "Когда ты просишь вещь, которую я не могу купить, мне неловко. Мне важно быть честной о деньгах. Давай посмотрим вместе, что можно сделать.", explanation: "Правильно: факт, чувство, потребность и приглашение к совместному решению." },
+                { correct: false, text: "Ты эгоист.", explanation: "Оскорбление. Вызовет только агрессию." },
+                { correct: false, text: "Мне неприятно. Ты должен понимать, что у нас нет денег.", explanation: "«Ты должен понимать» — требование. Нет конкретной просьбы." }
+            ]
+        },
+        {
+            situation: "Подросток публично высмеял ваши вкусы (музыку, одежду) при своих друзьях.",
+            tyMessage: "«Как ты можешь так со мной разговаривать! Что за неуважение!»",
+            options: [
+                { correct: false, text: "Мне было стыдно и неприятно. Ты должен был заступиться за меня.", explanation: "«Ты должен был» — обвинение и долженствование." },
+                { correct: true, text: "Когда ты смеёшься над моими вкусами при друзьях, мне обидно. Мне важно уважение при других. Скажи мне об этом наедине, ладно?", explanation: "Правильно: факт, чувство, потребность и конкретная просьба." },
+                { correct: false, text: "Ты предатель.", explanation: "Ярлык и обвинение." },
+                { correct: false, text: "Когда ты при своих друзьях высмеиваешь мои вкусы, я чувствую себя ничтожной и жалкой. Мне так больно, что я не знаю, как с этим справиться. Ты должен меня защищать, а не выставлять на посмешище.", explanation: "Длинное и эмоциональное, но в конце — «ты должен меня защищать». Обвинение и требование." }
+            ]
+        },
+        {
+            situation: "Подросток заявил, что ненавидит свою внешность и хочет сделать тату назло вам.",
+            tyMessage: "«Ты с ума сошёл! Никаких тату, пока я жив!»",
+            options: [
+                { correct: false, text: "Когда ты говоришь, что хочешь тату, я прихожу в ужас. Я думаю о том, как это будет выглядеть в будущем, и мне становится страшно за твою жизнь. Ты не должен этого делать, пока не станешь взрослым и не поймёшь последствия.", explanation: "Длинное, но содержит «ты не должен» — запрет и требование. Нет диалога." },
+                { correct: false, text: "Ты с ума сошёл.", explanation: "Обесценивание и приказ." },
+                { correct: true, text: "Когда ты говоришь о тату назло мне, я тревожусь. Мне важно, чтобы ты принимал решения сам. Давай поговорим о том, что тебя беспокоит в своей внешности.", explanation: "Правильно: факт, чувство, потребность и приглашение к диалогу." },
+                { correct: false, text: "Мне не нравится твоя идея. Ты должен меня послушаться.", explanation: "«Ты должен послушаться» — требование." }
+            ]
+        },
+        {
+            situation: "Подросток соврал, где был, но вы узнали правду.",
+            tyMessage: "«Ты мне врал! Как ты мог! Тебе нельзя верить!»",
+            options: [
+                { correct: false, text: "Когда я узнала, что ты был не у друга, а на даче с компанией, я почувствовала себя обманутой и преданной. Я не могу тебе больше доверять. Ты должен понять, как мне больно, и никогда больше так не делать.", explanation: "Длинное сообщение, но с обвинением («ты должен понять») и обобщением «не могу доверять». Требование, а не просьба." },
+                { correct: false, text: "Ты врун.", explanation: "Ярлык и обвинение личности." },
+                { correct: true, text: "Когда я узнала, что ты был не у друга, я расстроилась. Мне важно, чтобы я могла тебе доверять. Расскажи, почему ты не сказал правду?", explanation: "Правильно: факт, чувство (расстройство), потребность (доверие) и приглашение к диалогу." },
+                { correct: false, text: "Мне неприятно. Ты должен был сказать правду.", explanation: "«Ты должен был» — обвинение и долженствование." }
+            ]
+        },
+        {
+            situation: "Вы увидели, что подросток курит (или пробовал вейп).",
+            tyMessage: "«Ты что, курить вздумал?! Я тебе покажу!»",
+            options: [
+                { correct: false, text: "Ты губишь своё здоровье. Прекрати немедленно.", explanation: "Приказ и оценка. Никаких чувств и просьб от первого лица." },
+                { correct: false, text: "Когда я увидела, что ты куришь, я пришла в ужас. Я столько сил вложила в твоё здоровье, а ты всё разрушаешь. Мне так страшно за твоё будущее, что я не знаю, что делать. Ты должен пообещать мне, что больше никогда не возьмёшь сигарету.", explanation: "Длинное эмоциональное сообщение, но в конце — «ты должен пообещать». Требование и обвинение в неблагодарности." },
+                { correct: true, text: "Когда я узнала, что ты пробовал курить, я заволновалась. Мне важно, чтобы ты был здоров. Давай поговорим о том, что тебя подтолкнуло к этому.", explanation: "Правильно: факт, чувство (волнение), потребность (здоровье) и приглашение к диалогу." },
+                { correct: false, text: "Я разочарована. Ты меня не уважаешь.", explanation: "Обвинение в адрес подростка. Нет описания собственных чувств через «я» и нет просьбы." }
+            ]
+        },
+        {
+            situation: "Подросток в очередной раз оставил грязную посуду по всему дому.",
+            tyMessage: "«Опять твоя посуда везде! Сколько можно!»",
+            options: [
+                { correct: true, text: "Когда я вижу грязную посуду по всей квартире, я устаю. Мне важно, чтобы дом оставался в порядке. Убери за собой, пожалуйста.", explanation: "Правильно: факт, чувство (усталость), потребность (порядок) и конкретная просьба." },
+                { correct: false, text: "Когда я вижу грязную посуду по всему дому, меня охватывает отчаяние, ведь я убираю, убираю, а конца этому нет. Я чувствую себя прислугой в собственном доме. Ты должен уважать мой труд и убирать за собой.", explanation: "Длинное сообщение, но в конце — «ты должен уважать мой труд». Обвинение и требование." },
+                { correct: false, text: "Ты неряха.", explanation: "Ярлык и обвинение личности." },
+                { correct: false, text: "Мне неприятно. Ты должен убирать за собой.", explanation: "«Ты должен» — требование. Нет конкретной просьбы." }
+            ]
+        },
+        {
+            situation: "Подросток закатил истерику из-за того, что вы не пустили его на ночную тусовку.",
+            tyMessage: "«Хватит орать! Я сказал — нельзя!»",
+            options: [
+                { correct: false, text: "Когда ты кричишь на меня из-за тусовки, я чувствую бессилие и обиду. Я всю жизнь стараюсь ради тебя, а ты меня не ценишь. Ты должен понять, что я запрещаю не из вредности, а потому что люблю тебя.", explanation: "Длинное сообщение, но содержит обвинение в неблагодарности и «ты должен понять». Требование." },
+                { correct: true, text: "Когда ты кричишь, я пугаюсь. Мне важно, чтобы мы слышали друг друга. Давай обсудим спокойно, почему я не разрешаю.", explanation: "Правильно: факт, чувство (испуг), потребность (взаимное слышание) и приглашение к спокойному разговору." },
+                { correct: false, text: "Ты неблагодарный.", explanation: "Ярлык и обвинение." },
+                { correct: false, text: "Мне страшно, когда ты так кричишь. Ты должен меня слушаться.", explanation: "Есть чувство, но «ты должен слушаться» — требование." }
+            ]
+        },
+        {
+            situation: "Подросток отказывается идти к врачу, хотя очевидно, что он болен.",
+            tyMessage: "«Ты что, совсем больной? Немедленно одевайся, идём к врачу!»",
+            options: [
+                { correct: false, text: "Ты что, глупый? Надо лечиться.", explanation: "Оскорбление и приказ." },
+                { correct: false, text: "Когда я вижу, что ты кашляешь и не хочешь идти к врачу, я невероятно тревожусь. Я думаю о самом плохом, я не сплю ночами, представляя, что с тобой что-то случится. Ты должен немедленно пойти к врачу, чтобы я успокоилась.", explanation: "Длинное эмоциональное сообщение, но в конце — «ты должен немедленно». Требование." },
+                { correct: false, text: "Ты просто хочешь меня довести.", explanation: "Обвинение в адрес подростка. Нет чувств через «я» и нет просьбы." },
+                { correct: true, text: "Я вижу, что ты плохо себя чувствуешь, но к врачу идти не хочешь. Мне важно, чтобы ты был здоров. Давай обсудим, что тебя беспокоит в этом походе.", explanation: "Правильно: факт, чувство (забота), потребность (здоровье) и приглашение к диалогу." }
+            ]
+        },
+        {
+            situation: "Подросток требует денег на карманные расходы сверх оговорённой суммы и злится, когда вы отказываете.",
+            tyMessage: "«Ты что, миллионер? У нас нет денег на твои хотелки!»",
+            options: [
+                { correct: true, text: "Когда ты просишь больше денег, а я не могу дать, я чувствую неловкость. Мне важно, чтобы мы договаривались о сумме вместе. Давай обсудим, на что тебе нужно и что мы можем.", explanation: "Правильно: факт, чувство (неловкость), потребность (договариваться вместе) и приглашение к разговору." },
+                { correct: false, text: "Когда ты злишься из-за денег, мне становится очень горько, ведь я работаю, стараюсь, отдаю тебе всё, что могу, а в ответ — только недовольство. Ты должен понимать, что деньги не берутся из воздуха, и ценить то, что есть.", explanation: "Длинное, но с обвинением («ты должен ценить») и долженствованием." },
+                { correct: false, text: "Хватит попрошайничать.", explanation: "Обесценивание и приказ." },
+                { correct: false, text: "Ты должен уметь довольствоваться тем, что есть.", explanation: "«Ты должен» — долженствование, нравоучение." }
+            ]
+        },
+        {
+            situation: "Подросток забрал вашу вещь без спроса и испортил её.",
+            tyMessage: "«Ты что, обнаглел? Это была моя любимая вещь!»",
+            options: [
+                { correct: false, text: "Ты эгоист и вандал.", explanation: "Ярлыки и обвинение личности." },
+                { correct: false, text: "Ты должен был спросить разрешения, прежде чем брать.", explanation: "«Ты должен был» — обвинение и долженствование." },
+                { correct: true, text: "Я увидела, что вещь испорчена, и мне стало обидно. Мне важно, чтобы мои вещи не брали без спроса. Объясни, как так получилось?", explanation: "Правильно: факт, чувство (обида), потребность (уважение к вещам) и приглашение к диалогу." },
+                { correct: false, text: "Когда я увидела, что моя любимая вещь испорчена, я была в ярости и отчаянии. Я так много работаю, чтобы у нас всё было, а ты так со мной обходишься. Ты должен немедленно извиниться и возместить мне это.", explanation: "Длинное, но с обвинением и требованием «ты должен немедленно»." }
+            ]
+        },
+        {
+            situation: "Подросток в грубой форме отказался сидеть с младшим братом/сестрой, как вы договаривались.",
+            tyMessage: "«Мы же договаривались! Как ты можешь так со мной поступать!»",
+            options: [
+                { correct: false, text: "Когда ты отказываешься помогать с младшим, я в панике, ведь я никуда не могу пойти, я заперта дома, у меня нет своей жизни. Я так устала, что сил нет. Ты должен понимать, что мы семья и должны помогать друг другу.", explanation: "Длинное, но с обвинением и долженствованием («ты должен понимать»)." },
+                { correct: true, text: "Когда ты отказываешься от того, о чём мы договорились, я растерялась. Мне важно планировать время. Давай обсудим, что изменилось.", explanation: "Правильно: факт, чувство (растерянность), потребность (планирование) и приглашение к разговору." },
+                { correct: false, text: "Ты безответственный.", explanation: "Ярлык и обвинение." },
+                { correct: false, text: "Мне больно. Ты должен держать слово.", explanation: "Есть чувство, но «ты должен держать слово» — требование." }
+            ]
+        },
+        {
+            situation: "Подросток отказывается есть то, что вы приготовили, и демонстративно заказывает доставку.",
+            tyMessage: "«Я старалась, готовила, а ты! Неблагодарный!»",
+            options: [
+                { correct: true, text: "Когда ты заказываешь доставку, а мой ужин остаётся нетронутым, я расстраиваюсь. Мне важно чувствовать, что моя забота нужна. Скажи, что тебе хочется есть, и я приготовлю.", explanation: "Правильно: факт, чувство (расстройство), потребность (забота нужна) и конкретная просьба." },
+                { correct: false, text: "Ты неблагодарный.", explanation: "Ярлык и обвинение." },
+                { correct: false, text: "Мне обидно. Ты должен есть то, что я приготовила.", explanation: "«Ты должен есть» — требование и принуждение." },
+                { correct: false, text: "Когда я вижу, что мой ужин не съеден, а ты заказываешь доставку, мне кажется, что все мои усилия напрасны. Я не сплю ночами, думаю, что приготовить, стараюсь, а в ответ — полное равнодушие. Ты должен ценить то, что я для тебя делаю.", explanation: "Длинное, но с обвинением («ты должен ценить») и упрёком." }
+            ]
+        },
+        {
+            situation: "Подросток требует, чтобы вы не заходили в его комнату без стука, даже с уборкой.",
+            tyMessage: "«Ещё чего! Это мой дом, я буду заходить, когда хочу!»",
+            options: [
+                { correct: false, text: "Когда ты запрещаешь мне заходить в твою комнату, мне кажется, что я теряю тебя, что я становлюсь чужой в собственном доме. Я же хочу только помочь, убрать, позаботиться. Ты должен понять, что я — твоя мать, и мне небезразлично.", explanation: "Длинное, но с долженствованием «ты должен понять» и апелляцией к статусу." },
+                { correct: false, text: "Не указывай мне в моём доме.", explanation: "Борьба за власть, приказ. Никаких чувств и просьб." },
+                { correct: true, text: "Когда ты просишь стучать, я понимаю, что тебе нужно своё пространство. Мне важно уважать твои границы. Давай договоримся, когда можно заходить с уборкой.", explanation: "Правильно: факт, чувство (понимание), потребность (уважение границ) и конкретная просьба-договор." },
+                { correct: false, text: "Мне неприятно, что ты меня не пускаешь. Ты должен пускать меня, когда я хочу.", explanation: "«Ты должен пускать» — требование и принуждение." }
+            ]
+        },
+        {
+            situation: "Подросток сравнивает вас с родителями своих друзей не в вашу пользу.",
+            tyMessage: "«А вот у Пети мама не такая! Иди к Пете и живи!»",
+            options: [
+                { correct: false, text: "Ты неблагодарный.", explanation: "Ярлык и обвинение." },
+                { correct: true, text: "Когда ты говоришь, что у других родителей лучше, мне обидно. Мне важно быть хорошей матерью для тебя. Расскажи, чего тебе не хватает?", explanation: "Правильно: факт, чувство (обида), потребность (быть хорошей матерью) и приглашение к диалогу." },
+                { correct: false, text: "Когда ты сравниваешь меня с другими родителями, мне очень больно, ведь я вкладываю в тебя всю душу, работаю, готовлю, помогаю с уроками, а в ответ слышу только упрёки. Ты должен ценить то, что у тебя есть, и перестать меня сравнивать.", explanation: "Длинное, но с обвинением («ты должен ценить») и упрёком." },
+                { correct: false, text: "Мне неприятно. Ты должен перестать меня сравнивать.", explanation: "«Ты должен» — требование. Нет конкретной просьбы." }
+            ]
+        },
+        {
+            situation: "Подросток отказывается ехать с вами на семейный праздник, называя это «сборищем скучных стариков».",
+            tyMessage: "«Как ты смеешь так говорить о бабушке! Немедленно собирайся!»",
+            options: [
+                { correct: false, text: "Ты эгоист.", explanation: "Ярлык и обвинение." },
+                { correct: false, text: "Мне стыдно за тебя. Ты должен ехать, это семейная традиция.", explanation: "«Ты должен ехать» — требование и давление." },
+                { correct: true, text: "Когда ты отказываешься ехать на праздник, я расстраиваюсь. Мне важно, чтобы мы были вместе с семьёй. Расскажи, что тебя смущает?", explanation: "Правильно: факт, чувство (расстройство), потребность (быть вместе) и приглашение к диалогу." },
+                { correct: false, text: "Когда ты называешь наш семейный праздник скучным сборищем, мне становится невыносимо больно, ведь там будут бабушка и дедушка, которые тебя любят, которые ждут тебя. Я не могу поехать без тебя, ведь все спросят, где ты. Ты должен уважать семью и поехать со мной.", explanation: "Длинное, но с обвинением, манипуляцией («все спросят, где ты») и требованием «ты должен уважать»." }
+            ]
+        }
+    ];
+
+    const TOTAL = situations.length;
+    let currentIndex = 0;
+    let correctCount = 0;
+    let answered = false;
+
+    const contentDiv = document.getElementById('content');
+    const scoreBadge = document.getElementById('scoreBadge');
+
+    function updateScore() {
+        scoreBadge.textContent = `Верно: ${correctCount} / ${TOTAL}`;
+    }
+
+    function renderIntro() {
+        contentDiv.innerHTML = introHTML;
+        document.getElementById('startBtn').addEventListener('click', () => {
+            currentIndex = 0;
+            correctCount = 0;
+            updateScore();
+            renderSituation();
+        });
+        updateScore();
+    }
+
+    function renderSituation() {
+        if (currentIndex >= TOTAL) {
+            renderFinish();
+            return;
+        }
+        const s = situations[currentIndex];
+        answered = false;
+
+        const progressPercent = (currentIndex / TOTAL) * 100;
+
+        let html = `
+            <div class="game-top">
+                <div class="progress-info">Ситуация ${currentIndex + 1} из ${TOTAL}</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" style="width: ${progressPercent}%"></div>
+                </div>
+            </div>
+
+            <div class="situation-card">
+                <div class="situation-label">Ситуация</div>
+                <div class="situation-text">${s.situation}</div>
+            </div>
+
+            <div class="ty-message">${s.tyMessage}</div>
+
+            <div class="options-title">Выберите правильное Я-сообщение:</div>
+            <div class="options" id="optionsContainer">
+        `;
+
+        s.options.forEach((opt, idx) => {
+            html += `<button class="option" data-idx="${idx}">${opt.text}</button>`;
+        });
+
+        html += `
+            </div>
+            <div class="feedback" id="feedback"></div>
+            <div class="nav-row">
+                <button class="btn secondary" id="backBtn" ${currentIndex === 0 ? 'disabled' : ''}>← Назад</button>
+                <button class="btn" id="nextBtn" disabled>Далее →</button>
+            </div>
+        `;
+
+        contentDiv.innerHTML = html;
+
+        contentDiv.querySelectorAll('.option').forEach(btn => {
+            btn.addEventListener('click', () => handleAnswer(parseInt(btn.dataset.idx)));
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderSituationPreview();
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (!answered) return;
+            currentIndex++;
+            renderSituation();
+        });
+    }
+
+    function renderSituationPreview() {
+        const s = situations[currentIndex];
+        const progressPercent = (currentIndex / TOTAL) * 100;
+        let html = `
+            <div class="game-top">
+                <div class="progress-info">Ситуация ${currentIndex + 1} из ${TOTAL} (просмотр)</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" style="width: ${progressPercent}%"></div>
+                </div>
+            </div>
+
+            <div class="situation-card">
+                <div class="situation-label">Ситуация</div>
+                <div class="situation-text">${s.situation}</div>
+            </div>
+
+            <div class="ty-message">${s.tyMessage}</div>
+
+            <div class="options-title">Варианты Я-сообщений:</div>
+            <div class="options">
+        `;
+        s.options.forEach(opt => {
+            const cls = opt.correct ? 'option correct locked' : 'option locked';
+            const tag = opt.correct ? '<span class="tag">Правильный</span>' : '';
+            html += `<div class="${cls}">${tag}${opt.text}</div>`;
+        });
+        html += `
+            </div>
+            <div class="feedback correct show">
+                <span class="fb-title">Правильный вариант выделен зелёным.</span>
+                ${s.options.find(o => o.correct).explanation}
+            </div>
+            <div class="nav-row">
+                <button class="btn secondary" id="backBtn">← Назад</button>
+                <button class="btn" id="nextBtn">Далее →</button>
+            </div>
+        `;
+        contentDiv.innerHTML = html;
+        document.getElementById('backBtn').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderSituationPreview();
+            }
+        });
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentIndex++;
+            renderSituation();
+        });
+    }
+
+    function handleAnswer(idx) {
+        if (answered) return;
+        answered = true;
+
+        const s = situations[currentIndex];
+        const opt = s.options[idx];
+        const isCorrect = opt.correct;
+
+        if (isCorrect) correctCount++;
+        updateScore();
+
+        contentDiv.querySelectorAll('.option').forEach((btn, i) => {
+            btn.classList.add('locked');
+            if (s.options[i].correct) {
+                btn.classList.add('correct');
+            } else if (i === idx && !isCorrect) {
+                btn.classList.add('wrong');
+            }
+        });
+
+        const feedback = document.getElementById('feedback');
+        feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+
+        let fbText = '';
+        if (isCorrect) {
+            fbText = `<span class="fb-title">✅ Верно!</span>${opt.explanation}`;
+        } else {
+            const correctOpt = s.options.find(o => o.correct);
+            fbText = `<span class="fb-title">❌ Это не Я-сообщение.</span>${opt.explanation}<br><br><strong>Правильный вариант:</strong> ${correctOpt.text}<br><br>${correctOpt.explanation}`;
+        }
+        feedback.innerHTML = fbText;
+
+        document.getElementById('nextBtn').disabled = false;
+    }
+
+    function renderFinish() {
+        const percent = Math.round((correctCount / TOTAL) * 100);
+        let message = '';
+        if (percent === 100) {
+            message = 'Отлично! Вы уверенно владеете формулой Я-сообщения. Попробуйте применять её в реальных разговорах с подростком — начните с одной ситуации в день.';
+        } else if (percent >= 60) {
+            message = 'Хороший результат! Вы уже понимаете структуру Я-сообщения, но иногда сбиваетесь на обвинение или требование. Пересмотрите разбор ошибок и попробуйте ещё раз.';
+        } else {
+            message = 'Пока непросто. Это нормально: переходить с Ты-сообщений на Я-сообщения — навык, который требует практики. Пересмотрите формулу: Факт → Чувство → Потребность → Просьба. Пройдите практикум ещё раз.';
+        }
+
+        contentDiv.innerHTML = `
+            <div class="finish">
+                <h2>Практикум завершён</h2>
+                <div class="big-score">${correctCount} / ${TOTAL}</div>
+                <div class="score-label">правильных ответов (${percent}%)</div>
+                <div class="message">${message}</div>
+                <button class="btn" id="restartBtn">Пройти заново</button>
+            </div>
+        `;
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            currentIndex = 0;
+            correctCount = 0;
+            updateScore();
+            renderSituation();
+        });
+    }
+
+    renderIntro();
+</script>
+</body>
+</html>
